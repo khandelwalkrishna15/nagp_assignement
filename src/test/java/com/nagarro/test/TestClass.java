@@ -14,7 +14,7 @@ public class TestClass{
 	
 	sampleTestMethods = new SampleTestMethods();
 	
-	Assert.assertEquals(sampleTestMethods.add2Numbers(10, 15), 15  );
+	Assert.assertEquals(sampleTestMethods.add2Numbers(10, 15), 25  );
 }
 	@Test
 	public void TestCase2() {	

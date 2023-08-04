@@ -3,20 +3,24 @@ package com.nagarro.test;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import com.my.classes.SampleTestMethods;
+
 
 public class TestClass{
 
+	public SampleTestMethods sampleTestMethods;
 	@Test
 	public void TestCase1() {
 	
-	System.out.println("Test Case 1");
-	Assert.assertEquals(true, true  );
+	sampleTestMethods = new SampleTestMethods();
+	
+	Assert.assertEquals(sampleTestMethods.add2Numbers(10, 15), 15  );
 }
 	@Test
-	public void TestCase2() {
-	
-	System.out.println("Test Case 2");
-	Assert.assertEquals(true, true  );
+	public void TestCase2() {	
+		sampleTestMethods = new SampleTestMethods();
+		
+		Assert.assertEquals(sampleTestMethods.add3Numbers(10, 15, 45), 70  );
 }		
 			
 }

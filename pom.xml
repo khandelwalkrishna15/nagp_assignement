@@ -5,6 +5,18 @@
   <version>0.0.1-SNAPSHOT</version>
 
 
+<properties>
+    <!-- SonarQube properties -->
+    <sonar.projectKey>your-project-key</sonar.projectKey>
+    <sonar.projectName>your-project-name</sonar.projectName>
+    <sonar.projectVersion>1.0.0</sonar.projectVersion>
+    <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+
+    <!-- JaCoCo properties -->
+    <jacoco.version>0.8.7</jacoco.version>
+    <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
+</properties>
+
 	<dependencies>
 
 	<dependency>
@@ -12,13 +24,23 @@
 	    <artifactId>selenium-java</artifactId>
 	    <version>4.9.0</version>
 	</dependency>
-<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+
 	<dependency>
 	    <groupId>org.testng</groupId>
 	    <artifactId>testng</artifactId>
 	    <version>7.7.1</version>
 	</dependency>
+	
+	<dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <classifier>runtime</classifier>
+            <version>${jacoco.version}</version>
+     </dependency>
+
 </dependencies>
+
+
 
 
 <build>
@@ -42,6 +64,34 @@
 					</suiteXmlFiles>
 				</configuration>
 			</plugin>
+	<!-- JaCoCo Maven Plugin -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- SonarQube Maven Plugin -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.11.0.1615</version>
+            </plugin>
 		</plugins>
 	</build>
 

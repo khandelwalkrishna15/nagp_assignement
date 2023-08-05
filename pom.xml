@@ -7,7 +7,7 @@
 
 <properties>
     <!-- SonarQube properties -->
-	<sonar.login>sqa_05fd54c9b7b357c243e5aec1d566b8fd1c6c14a6</sonar.login>
+	<!--<sonar.login>SONAR_PROJECT_KEY</sonar.login>-->
 
     <!-- JaCoCo properties -->
     <jacoco.version>0.8.7</jacoco.version>

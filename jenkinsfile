@@ -1,6 +1,8 @@
 pipeline {
     agent any
-	
+	parameters {
+        string(name: 'SONAR_PROJECT_KEY', defaultValue: 'sqa_05fd54c9b7b357c243e5aec1d566b8fd1c6c14a6', description: 'SonarQube project key')
+    }
     triggers {
         // With this cron expression, the pipeline will be triggered at 12 AM (midnight) on the first day of every month.
         cron('0 0 1 * *')
@@ -12,15 +14,32 @@ pipeline {
                 echo 'Checkout'
             }
         }
-
-        stage('Sonar') {
+		stage('Build') {
             steps {
-                // Run the Sonar scanner for the Maven project
-                bat 'mvn package sonar:sonar'
+                // Building project using Maven on Windows.
+                bat 'mvn clean package'
+            }
+        }
+        stage('SonarQube Analysis') {
+             when {
+                expression { return params.SONAR_PROJECT_KEY != '' }
+            }
+            steps {
+             // Executing SonarQube Scanner using Maven with the provided project key
+                bat "mvn -Dsonar.projectKey=${params.SONAR_PROJECT_KEY} sonar:sonar"
             }
         }
 
         stage('Testing') {
+              when {
+                not {
+                    // Only execute this stage if the previous stages were successful
+                    anyOf {
+                        currentBuild.result == null
+                        currentBuild.result == 'SUCCESS'
+                    }
+                }
+            }
             steps {
                 echo 'Running tests...'
                 // Run the Maven test goal
@@ -29,6 +48,16 @@ pipeline {
         }
 
         stage('JFrog Deployment') {
+        
+        	when {
+                not {
+                    // Only execute this stage if the previous stages were successful
+                    anyOf {
+                        currentBuild.result == null
+                        currentBuild.result == 'SUCCESS'
+                    }
+                }
+            }
             steps {
                 // Deploy the Maven artifact to Artifactory using rtMavenDeployer
                 rtMavenDeployer(

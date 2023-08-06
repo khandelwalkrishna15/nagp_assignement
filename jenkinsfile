@@ -1,6 +1,6 @@
 pipeline {
     agent any
-	parameters {
+    parameters {
         string(name: 'SONAR_PROJECT_KEY', defaultValue: 'sqa_05fd54c9b7b357c243e5aec1d566b8fd1c6c14a6', description: 'SonarQube project key')
     }
     triggers {
@@ -14,27 +14,28 @@ pipeline {
                 echo 'Checkout'
             }
         }
-		stage('Build') {
+        stage('Build') {
             steps {
                 // Building project using Maven on Windows.
                 bat 'mvn clean package'
             }
         }
         stage('SonarQube Analysis') {
-             when {
+            when {
                 expression { return params.SONAR_PROJECT_KEY != '' }
             }
             steps {
-             // Executing SonarQube Scanner using Maven with the provided project key
+                // Executing SonarQube Scanner using Maven with the provided project key
                 bat "mvn -Dsonar.projectKey=${params.SONAR_PROJECT_KEY} sonar:sonar"
             }
         }
 
         stage('Testing') {
-              when {
+            when {
                 not {
-               expression {
-                    return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                    expression {
+                        return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                    }
                 }
             }
             steps {
@@ -45,10 +46,11 @@ pipeline {
         }
 
         stage('JFrog Deployment') {
-        
-        	when {
-               expression {
-                    return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+            when {
+                not {
+                    expression {
+                        return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                    }
                 }
             }
             steps {
@@ -79,8 +81,8 @@ pipeline {
             // For example, using the built-in 'emailext' plugin:
             emailext body: 'The Jenkins pipeline has finished!',
                      recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                     subject: 'Jenkins Pipeline Status - ${currentBuild.currentResult}',
-                     to: 'krishna.khandelwal@nagarro.com'
+                     subject: "Jenkins Pipeline Status - ${currentBuild.currentResult}",
+                     to: 'khandelwal.krishna15@gmail.com'
         }
     }
 }

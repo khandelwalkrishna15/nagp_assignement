@@ -57,7 +57,7 @@ pipeline {
                 // Deploy the Maven artifact to Artifactory using rtMavenDeployer
                 rtMavenDeployer(
                     id: 'deployer',
-                    serverId: 'nagp_artifactory_pipeline',
+                    serverId: 'nagpartifactory@pipeline',
                     releaseRepo: 'nagpsamplerepo',
                     snapshotRepo: 'nagpsamplerepo'
                 )
@@ -70,7 +70,7 @@ pipeline {
                 )
                 
                 // Publish build info to Artifactory
-                rtPublishBuildInfo(serverId: 'nagp_artifactory_pipeline')
+                rtPublishBuildInfo(serverId: 'nagpartifactory@pipeline')
             }
         }
     }

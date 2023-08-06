@@ -33,11 +33,8 @@ pipeline {
         stage('Testing') {
               when {
                 not {
-                    // Only execute this stage if the previous stages were successful
-                    anyOf {
-                        currentBuild.result == null
-                        currentBuild.result == 'SUCCESS'
-                    }
+               expression {
+                    return currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
             }
             steps {
@@ -50,12 +47,8 @@ pipeline {
         stage('JFrog Deployment') {
         
         	when {
-                not {
-                    // Only execute this stage if the previous stages were successful
-                    anyOf {
-                        currentBuild.result == null
-                        currentBuild.result == 'SUCCESS'
-                    }
+               expression {
+                    return currentBuild.result == null || currentBuild.result == 'SUCCESS'
                 }
             }
             steps {

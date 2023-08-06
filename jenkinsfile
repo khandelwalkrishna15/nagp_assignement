@@ -34,7 +34,7 @@ pipeline {
             when {
                 not {
                     expression {
-                        return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                        return currentBuild.result == 'SUCCESS'
                     }
                 }
             }
@@ -49,7 +49,7 @@ pipeline {
             when {
                 not {
                     expression {
-                        return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                        return currentBuild.result == 'SUCCESS'
                     }
                 }
             }

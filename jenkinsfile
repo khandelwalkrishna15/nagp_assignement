@@ -1,9 +1,7 @@
 pipeline {
     agent any
-   environment {
-        // Define environment variables here
-        MY_VARIABLE = "Hello, Jenkins!"
-        SONAR_TOKEN = credentials('sqa_05fd54c9b7b357c243e5aec1d566b8fd1c6c14a6')
+    parameters {
+        string(name: 'SONAR_PROJECT_KEY', defaultValue: '', description: 'SonarQube project key')
     }
     triggers {
         // With this cron expression, the pipeline will be triggered at 12 AM (midnight) on the first day of every month.
@@ -14,7 +12,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checkout'
-                echo "My variable value: ${env.MY_VARIABLE}" 
             }
         }
         stage('Build') {
@@ -25,15 +22,15 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             when {
-                expression { return env.SONAR_TOKEN != null }
+                expression { return params.SONAR_PROJECT_KEY != '' }
             }
             steps {
-                // Executing SonarQube Scanner using Maven with the provided access token
-                bat "mvn sonar:sonar -Dsonar.login=${env.SONAR_TOKEN}"
+                // Executing SonarQube Scanner using Maven with the provided project key
+                bat "mvn -Dsonar.projectKey=${params.SONAR_PROJECT_KEY} sonar:sonar"
             }
         }
 
-        stage('Unit Testing') {
+        stage('Testing') {
             when {
                 not {
                     expression {
@@ -80,8 +77,7 @@ pipeline {
 
     post {
         always {
-            // Add your email notification step here.
-            // For example, using the built-in 'emailext' plugin:
+
             emailext body: 'The Jenkins pipeline has finished!',
                      recipientProviders: [[$class: 'CulpritsRecipientProvider']],
                      subject: "Jenkins Pipeline Status - ${currentBuild.currentResult}",

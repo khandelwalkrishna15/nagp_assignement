@@ -58,8 +58,8 @@ pipeline {
                 rtMavenDeployer(
                     id: 'deployer',
                     serverId: 'nagp_artifactory_pipeline',
-                    releaseRepo: 'your-release-repo',
-                    snapshotRepo: 'your-snapshot-repo'
+                    releaseRepo: 'nagpsamplerepo',
+                    snapshotRepo: 'nagpsamplerepo'
                 )
                 
                 // Run additional Maven goals using rtMavenRun

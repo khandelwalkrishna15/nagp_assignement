@@ -1,7 +1,9 @@
 pipeline {
     agent any
-    parameters {
-        string(name: 'SONAR_PROJECT_KEY', defaultValue: 'sqa_05fd54c9b7b357c243e5aec1d566b8fd1c6c14a6', description: 'SonarQube project key')
+   environment {
+        // Define environment variables here
+        MY_VARIABLE = "Hello, Jenkins!"
+        SONAR_TOKEN = credentials('sqa_05fd54c9b7b357c243e5aec1d566b8fd1c6c14a6')
     }
     triggers {
         // With this cron expression, the pipeline will be triggered at 12 AM (midnight) on the first day of every month.
@@ -12,6 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo 'Checkout'
+                echo "My variable value: ${env.MY_VARIABLE}" 
             }
         }
         stage('Build') {
@@ -22,15 +25,15 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             when {
-                expression { return params.SONAR_PROJECT_KEY != '' }
+                expression { return env.SONAR_TOKEN != null }
             }
             steps {
-                // Executing SonarQube Scanner using Maven with the provided project key
-                bat "mvn -Dsonar.projectKey=${params.SONAR_PROJECT_KEY} sonar:sonar"
+                // Executing SonarQube Scanner using Maven with the provided access token
+                bat "mvn sonar:sonar -Dsonar.login=${env.SONAR_TOKEN}"
             }
         }
 
-        stage('Testing') {
+        stage('Unit Testing') {
             when {
                 not {
                     expression {

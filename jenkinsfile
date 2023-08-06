@@ -26,7 +26,7 @@ pipeline {
             }
             steps {
                 // Executing SonarQube Scanner using Maven with the provided project key
-                bat "mvn -Dsonar.projectKey=${params.SONAR_PROJECT_KEY} sonar:sonar"
+                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY}"
             }
         }
 

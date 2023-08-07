@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    
+    environment {
+        MAVEN_HOME = tool name: 'Maven3', type: 'maven'
+        PATH = "C:/Users/krishnakhandelwal/apache-maven-3.9.3/bin"
+    }
     parameters {
         string(name: 'SONAR_PROJECT_KEY', defaultValue: '', description: 'SonarQube project key')
     }
@@ -54,22 +59,24 @@ pipeline {
                    } 
             }
             steps {
-               script {
-                    // Set up Maven with the desired Maven installation
-                    def mvnHome = tool name: 'Maven3', type: 'maven'
+              script {
+                    // Run additional Maven goals using rtMavenRun
+                    rtMavenRun(
+                        pom: 'pom.xml',
+                        goals: 'clean install'
+                    )
 
                     // Deploy the Maven artifact to Artifactory using rtMavenDeployer
-                    def rtServer = Artifactory.server 'nagp_artifactory'
-                    def rtMaven = Artifactory.newMavenBuild()
-
-                    rtMaven.deployer releaseRepo: 'example-repo-local', snapshotRepo: 'example-repo-local', server: rtServer
-                    rtMaven.resolver releaseRepo: 'example-repo-local', snapshotRepo: 'example-repo-local', server: rtServer
-
-                    // Run Maven goals using rtMavenRun
-                    rtMaven.run pom: 'pom.xml', goals: 'clean install', mavenOpts: '-Xmx1g', javaOpts: '-Xmx1g', executable: mvnHome
+                    rtMavenDeployer(
+                        id: 'deployer',
+                        serverId: 'nagp_artifactory',
+                        releaseRepo: 'example-repo-local',
+                        snapshotRepo: 'example-repo-local',
+                        resolverId: 'deployer'
+                    )
 
                     // Publish build info to Artifactory
-                    rtMaven.deployer.deployArtifacts buildInfo: rtMaven.buildInfo
+                    rtPublishBuildInfo(serverId: 'nagp_artifactory')
                 }
             }
         }

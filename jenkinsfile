@@ -56,7 +56,7 @@ pipeline {
             steps {
                script {
                     // Set up Maven with the desired Maven installation
-                    def mvnHome = tool name: 'Maven 3', type: 'maven'
+                    def mvnHome = tool name: 'Maven3', type: 'maven'
 
                     // Deploy the Maven artifact to Artifactory using rtMavenDeployer
                     def rtServer = Artifactory.server 'nagp_artifactory'

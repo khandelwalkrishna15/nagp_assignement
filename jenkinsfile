@@ -32,9 +32,11 @@ pipeline {
 
         stage('Testing') {
             when {
-                    expression {
+                   not{
+                   		expression {
                         return currentBuild.result == 'SUCCESS'
                     }
+                   } 
             }
             steps {
                 echo 'Running tests...'
@@ -45,9 +47,11 @@ pipeline {
 
         stage('JFrog Deployment') {
             when {
-                    expression {
+                   not{
+                   		expression {
                         return currentBuild.result == 'SUCCESS'
                     }
+                   } 
             }
             steps {
                 // Deploy the Maven artifact to Artifactory using rtMavenDeployer

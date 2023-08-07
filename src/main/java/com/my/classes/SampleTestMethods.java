@@ -21,4 +21,13 @@ public class SampleTestMethods {
 	}
 
 	
+	/*
+	 * This method is to add two numbers , it take 3 integer parameters a, b and c
+	 * and returns the sum of a, b, c
+	 */
+	
+	public int add4Numbers(int a , int b, int c, int d) {
+		return add3Numbers(a, b , c) + d;
+	}
+	
 }

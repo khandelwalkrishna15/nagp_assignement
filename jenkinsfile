@@ -32,11 +32,9 @@ pipeline {
 
         stage('Testing') {
             when {
-                not {
                     expression {
                         return currentBuild.result == 'SUCCESS'
                     }
-                }
             }
             steps {
                 echo 'Running tests...'
@@ -47,19 +45,17 @@ pipeline {
 
         stage('JFrog Deployment') {
             when {
-                not {
                     expression {
                         return currentBuild.result == 'SUCCESS'
                     }
-                }
             }
             steps {
                 // Deploy the Maven artifact to Artifactory using rtMavenDeployer
                 rtMavenDeployer(
                     id: 'deployer',
-                    serverId: 'nagpartifactory@pipeline',
-                    releaseRepo: 'nagpsamplerepo',
-                    snapshotRepo: 'nagpsamplerepo'
+                    serverId: 'nagp_artifactory',
+                    releaseRepo: 'example-repo-local',
+                    snapshotRepo: 'example-repo-local'
                 )
                 
                 // Run additional Maven goals using rtMavenRun
@@ -70,7 +66,7 @@ pipeline {
                 )
                 
                 // Publish build info to Artifactory
-                rtPublishBuildInfo(serverId: 'nagpartifactory@pipeline')
+                rtPublishBuildInfo(serverId: 'nagp_artifactory')
             }
         }
     }

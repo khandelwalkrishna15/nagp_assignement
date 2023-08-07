@@ -21,5 +21,12 @@ public class TestClass{
 		sampleTestMethods = new SampleTestMethods();		
 		Assert.assertEquals(sampleTestMethods.add3Numbers(10, 15, 45), 70  );
 }		
+	
+	
+	@Test
+	public void TestCase3() {	
+		sampleTestMethods = new SampleTestMethods();		
+		Assert.assertEquals(sampleTestMethods.add4Numbers(10, 15, 45, 70) , 140 );
+}		
 			
 }

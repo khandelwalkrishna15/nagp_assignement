@@ -66,8 +66,7 @@ pipeline {
                 // Run additional Maven goals using rtMavenRun
                 rtMavenRun(
                     pom: 'pom.xml',
-                    goals: 'clean install',
-                    deployerId: 'deployer'
+                    goals: 'clean install'
                 )
 
                 // Deploy the Maven artifact to Artifactory using rtMavenDeployer
@@ -76,6 +75,7 @@ pipeline {
                     serverId: 'nagp_artifactory',
                     releaseRepo: 'example-repo-local',
                     snapshotRepo: 'example-repo-local',
+                    deployerId: 'deployer'
                     
                 )
 

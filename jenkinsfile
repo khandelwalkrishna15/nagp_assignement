@@ -43,20 +43,26 @@ pipeline {
                 bat 'mvn clean test'
             }
         }
-		 stage('Generate JaCoCo Report') {
-            steps {
-                echo 'Generating JaCoCo coverage report...'
-                bat 'mvn jacoco:report'
-            }
-        }
-        
+		
          stage('SonarQube Analysis') {
             when {
                 expression { return params.SONAR_PROJECT_KEY != '' }
             }
             steps {
                 // Executing SonarQube Scanner using Maven with the provided project key
-                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY}"
+                //bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY}"
+                
+            script {
+            def sonarScannerCmd = "mvn sonar:sonar"
+            def testReportPath = "target/test-reports"  // Update this path to match the location of your test reports
+
+            // Append the test report path to the SonarQube analysis command
+            sonarScannerCmd += " -Dsonar.login=${params.SONAR_PROJECT_KEY}"
+            sonarScannerCmd += " -Dsonar.junit.reportPaths=${testReportPath}"
+
+            // Execute the SonarQube Scanner command
+            bat sonarScannerCmd
+        }
             }
         }
         

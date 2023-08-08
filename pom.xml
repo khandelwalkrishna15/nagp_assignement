@@ -91,9 +91,7 @@
             </goals>
         </execution>
     </executions>
-				<configuration>
-                    <outputDirectory>${project.build.directory}/jacoco-ut</outputDirectory>
-                </configuration>
+
 </plugin>
 
             <!-- SonarQube Maven Plugin -->

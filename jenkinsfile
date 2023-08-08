@@ -53,7 +53,12 @@ pipeline {
                 bat 'mvn clean test'
             }
         }
-
+		 stage('Generate JaCoCo Report') {
+            steps {
+                echo 'Generating JaCoCo coverage report...'
+                bat 'mvn jacoco:report'
+            }
+        }
         stage('JFrog Deployment') {
             when {
                 not {

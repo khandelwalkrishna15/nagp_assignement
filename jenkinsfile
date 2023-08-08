@@ -29,16 +29,6 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            when {
-                expression { return params.SONAR_PROJECT_KEY != '' }
-            }
-            steps {
-                // Executing SonarQube Scanner using Maven with the provided project key
-                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY}"
-            }
-        }
-
         stage('Testing') {
             when {
                 not {
@@ -59,6 +49,17 @@ pipeline {
                 bat 'mvn jacoco:report'
             }
         }
+        
+         stage('SonarQube Analysis') {
+            when {
+                expression { return params.SONAR_PROJECT_KEY != '' }
+            }
+            steps {
+                // Executing SonarQube Scanner using Maven with the provided project key
+                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY}"
+            }
+        }
+        
         stage('JFrog Deployment') {
             when {
                 not {

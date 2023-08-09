@@ -35,7 +35,7 @@ pipeline {
             }
             steps {
                 // Executing SonarQube Scanner using Maven with the provided project key
-                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY}"
+                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY} -Dsonar.testng.reportPaths=target/surefire-reports/testng-results.xml"
             }
         }
 

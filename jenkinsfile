@@ -2,14 +2,12 @@ pipeline {
     agent any
     
     environment {
+    	SONAR_PROJECT_KEY = credentials('sonar-jenkins')
         MAVEN_HOME = tool name: 'Maven3', type: 'maven'
         PATH = "${MAVEN_HOME}/bin:${env.PATH};C:\\Windows\\System32"
     }
 
-    parameters {
-        string(name: 'SONAR_PROJECT_KEY', defaultValue: '', description: 'SonarQube project key')
-    }
-
+    
     triggers {
         // With this cron expression, the pipeline will be triggered at 12 AM (midnight) on the first day of every month.
         cron('0 0 1 * *')
@@ -35,7 +33,7 @@ pipeline {
             }
             steps {
                 // Executing SonarQube Scanner using Maven with the provided project key
-                bat "mvn sonar:sonar -Dsonar.login=${params.SONAR_PROJECT_KEY} -Dsonar.testng.reportPaths=target/surefire-reports/testng-results.xml"
+                bat "mvn sonar:sonar -Dsonar.login=${env.SONAR_PROJECT_KEY} -Dsonar.testng.reportPaths=target/surefire-reports/testng-results.xml"
             }
         }
 

@@ -88,9 +88,9 @@ pipeline {
 
     post {
         always {
-            emailext body: 'The Jenkins pipeline has finished!',
+            emailext subject: "Jenkins Pipeline Status - ${currentBuild.currentResult}",
+            		 body: 'The Jenkins pipeline has finished!',
                      recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                     subject: "Jenkins Pipeline Status - ${currentBuild.currentResult}",
                      to: 'khandelwal.krishna15@gmail.com'
         }
     }

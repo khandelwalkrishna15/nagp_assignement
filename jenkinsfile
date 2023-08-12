@@ -9,8 +9,8 @@ pipeline {
 
     
     triggers {
-        // With this cron expression, the pipeline will be triggered at 12 AM (midnight) on the first day of every month.
-        cron('0 0 1 * *')
+        // With this cron expression, the pipeline will be triggered at 11:15 AM (everyday).
+        cron('15 11 * * *')
     }
 
     stages {
@@ -61,8 +61,7 @@ pipeline {
                 } 
             }
             steps {
-                // Run additional Maven goals using rtMavenRun
-               
+                          
 
                 // Deploy the Maven artifact to Artifactory using rtMavenDeployer
                 rtMavenDeployer(
